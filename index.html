@@ -1,1 +1,334 @@
-. 
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>404 Video с тихим хаосом и финальным звуком</title>
+<style>
+*{margin:0; padding:0; box-sizing:border-box;}
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(to right, #000000, #ffffff);
+    font-family: Arial, sans-serif;
+    position: relative;
+}
+.wrapper{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:60px;
+    position: relative;
+}
+.number{
+    font-size:180px;
+    font-weight:bold;
+    color:white;
+    text-shadow: 0 0 20px rgba(0,0,0,0.5);
+    position: relative;
+}
+.error-text{
+    position: absolute;
+    top: 20px;
+    right: -60px;
+    color: red;
+    font-size:24px;
+    font-weight:bold;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+.video-box{
+    position:relative;
+    width:350px;
+    height:350px;
+    border-radius:25px;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    box-shadow: 0 0 40px rgba(0,0,0,0.7);
+}
+video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.overlay{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:30px;
+    font-weight:bold;
+    color:black;
+    cursor:pointer;
+    transition: opacity 0.5s;
+}
+.play-btn{
+    position:absolute;
+    width:80px;
+    height:80px;
+    background: rgba(255,255,255,0.8);
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:40px;
+    color:black;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+.play-btn:hover{background: rgba(255,255,255,1); transform: scale(1.1);}
+.bottom-left-img{
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 100px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+.animated-text{
+    position: fixed;
+    bottom: 40px;
+    left: 140px;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid white;
+    width:0;
+}
+@keyframes typing {from { width: 0; } to { width: 460px; }}
+.lock-screen{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#00ffff;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:9999;
+}
+.lock-text{
+    color:red;
+    font-size:50px;
+    font-weight:bold;
+    text-align:center;
+    animation: blink 1s step-start infinite;
+    margin-bottom:30px;
+}
+@keyframes blink {0%,50%,100% {opacity:1;} 25%,75% {opacity:0;}}
+.center-img{width:200px; height:auto; margin-bottom:30px;}
+.bottom-right-img{position: fixed; bottom:20px; right:20px; width:120px; height:auto;}
+.tg-container{
+    position: fixed;
+    left:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:5px;
+    z-index:1000;
+}
+.tg-block{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+.tg-text{font-size:16px; font-weight:bold; color:white; display:flex; align-items:center; gap:2px;}
+.tg-img{width:50px; height:50px; border-radius:50%;}
+.tg-name{font-size:14px; font-weight:bold; color:white; text-align:center;}
+#secondVideoBox{
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 250px;
+    height: 140px;
+    display: none;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 0 20px rgba(0,0,0,0.7);
+    z-index:500;
+}
+#secondVideoBox video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.dynamic-video{
+    position:fixed;
+    width:80px;
+    height:45px;
+    object-fit:cover;
+    z-index:10000;
+}
+.final-img{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    z-index:20000;
+}
+</style>
+</head>
+<body>
+
+<div class="tg-container" style="top:20px;">
+  <div class="tg-block">
+    <img src="images/img4.jpg" class="tg-img" alt="Егор Лайк">
+    <div class="tg-name">Егор Лайк</div>
+    <div id="tgText1" class="tg-text">печатает<span id="dots1">.</span></div>
+  </div>
+  <div class="tg-block" style="margin-top:20px;">
+    <img src="images/img5.jpg" class="tg-img" alt="Юля">
+    <div class="tg-name">Юля</div>
+    <div id="tgText2" class="tg-text">печатает<span id="dots2">.</span></div>
+  </div>
+</div>
+
+<div class="wrapper">
+  <div class="number">4</div>
+  <div class="video-box" id="videoBox">
+    <video id="myVideo"><source src="video.mp4" type="video/mp4"></video>
+    <div class="overlay" id="overlay">Нажми</div>
+    <div class="play-btn" id="playBtn" style="display:none;">&#9658;</div>
+  </div>
+  <div class="number">4
+    <div class="error-text">Error</div>
+  </div>
+</div>
+
+<img src="images/img1.jpg" class="bottom-left-img" alt="Картинка 1">
+<div id="animatedText" class="animated-text">Нет Элегантик! Карбонары Не будет.</div>
+
+<!-- Второе видео -->
+<div id="secondVideoBox">
+  <video id="secondVideo"><source src="тук тук тук.mp4" type="video/mp4"></video>
+</div>
+
+<!-- Финальное изображение -->
+<img src="images/img6.png" id="finalImg" class="final-img" alt="Финал">
+
+<!-- Аудио -->
+<audio id="finalSound" src="sounds/mysound.mp3"></audio>
+
+<div id="lockScreen" class="lock-screen">
+  <div class="lock-text">ДАННЫЙ САЙТ ЗАБЛОКИРОВАН РОСКОМНАДЗОРОМ</div>
+  <img src="images/img2.jpg" class="center-img" alt="Центр">
+  <img src="images/img3.jpg" class="bottom-right-img" alt="Право низ">
+</div>
+
+<script>
+const video=document.getElementById('myVideo');
+const playBtn=document.getElementById('playBtn');
+const overlay=document.getElementById('overlay');
+const animatedText=document.getElementById('animatedText');
+const lockScreen=document.getElementById('lockScreen');
+const secondVideoBox=document.getElementById('secondVideoBox');
+const secondVideo=document.getElementById('secondVideo');
+
+const tgText1=document.getElementById('tgText1');
+const dots1=document.getElementById('dots1');
+const tgText2=document.getElementById('tgText2');
+const dots2=document.getElementById('dots2');
+
+const finalImg=document.getElementById('finalImg');
+const finalSound=document.getElementById('finalSound');
+
+let dotsInterval1,dotsInterval2;
+
+overlay.addEventListener('click', ()=>{
+    overlay.style.opacity=0;
+    setTimeout(()=> overlay.style.display='none',500);
+    video.play();
+    animatedText.style.animation='typing 4s steps(40,end) forwards';
+
+    // Telegram анимация
+    let count1=1;
+    dots1.textContent='.';
+    dotsInterval1=setInterval(()=>{
+        count1++; if(count1>3) count1=1;
+        dots1.textContent='.'.repeat(count1);
+    },500);
+    setTimeout(()=>{clearInterval(dotsInterval1); tgText1.textContent="КУ НАХУЙ";},3000);
+
+    setTimeout(()=>{
+        let count2=1;
+        dots2.textContent='.';
+        dotsInterval2=setInterval(()=>{
+            count2++; if(count2>3) count2=1;
+            dots2.textContent='.'.repeat(count2);
+        },500);
+        setTimeout(()=>{clearInterval(dotsInterval2); tgText2.textContent="Привет Любимые)";},2000);
+    },0);
+
+    // Второе видео через 5 секунд
+    setTimeout(()=>{
+        secondVideoBox.style.display='block';
+        secondVideo.play();
+        secondVideo.addEventListener('ended', ()=>{
+            secondVideoBox.style.display='none';
+        }, { once:true });
+    },5000);
+});
+
+function updateButton(){
+    if(video.paused){playBtn.style.display='flex'; playBtn.innerHTML="&#9658;";}
+    else playBtn.style.display='none';
+}
+playBtn.addEventListener('click',(e)=>{
+    if(video.paused) video.play(); else video.pause();
+    updateButton(); e.stopPropagation();
+});
+video.addEventListener('click',()=>{if(video.paused) video.play(); else video.pause(); updateButton();});
+video.addEventListener('play',updateButton);
+video.addEventListener('pause',updateButton);
+video.addEventListener('ended',()=>{
+    playBtn.style.display='none';
+    overlay.style.display='none';
+    lockScreen.style.display='flex';
+
+    // Через 3 секунды запускаем 25 хаотических видео с тихим звуком
+    setTimeout(()=>{
+        let count=0;
+        let interval=setInterval(()=>{
+            if(count>=25){clearInterval(interval); 
+                // Через 2 секунды показываем финальное изображение + звук
+                setTimeout(()=>{
+                    finalImg.style.display='block';
+                    finalSound.play();
+                },2000);
+                return;
+            }
+            let dynVid=document.createElement('video');
+            dynVid.src='тук тук тук.mp4';
+            dynVid.className='dynamic-video';
+            dynVid.autoplay=true;
+            dynVid.muted=false;
+            dynVid.volume = 0.1; // очень тихий звук
+            dynVid.controls=false;
+            dynVid.style.top=Math.random()*(window.innerHeight-50)+'px';
+            dynVid.style.left=Math.random()*(window.innerWidth-100)+'px';
+            document.body.appendChild(dynVid);
+            count++;
+        },200);
+    },3000);
+});
+</script>
+</body>
+</html>
